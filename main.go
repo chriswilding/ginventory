@@ -2,16 +2,20 @@ package main
 
 import (
 	"fmt"
-	"log"
 	"net/http"
 
+	"github.com/aws/aws-lambda-go/lambda"
+	"github.com/awslabs/aws-lambda-go-api-proxy/gorillamux"
 	"github.com/gorilla/mux"
 )
 
 func main() {
 	router := mux.NewRouter().StrictSlash(true)
 	router.HandleFunc("/", Index)
-	log.Fatal(http.ListenAndServe(":8080", router))
+
+	adaptor := gorillamux.New(router)
+
+	lambda.Start(adaptor)
 }
 
 func Index(w http.ResponseWriter, r *http.Request) {
