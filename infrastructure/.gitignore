@@ -1,0 +1,5 @@
+.terraform
+.terraform.lock.hcl
+ginventory-api.zip
+terraform.tfstate
+terraform.tfstate.backup
