@@ -7,6 +7,15 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      dynamodb-local:
+        image: "amazon/dynamodb-local:latest"
+        # options: >-
+        #   --entrypoint "java -jar DynamoDBLocal.jar -sharedDb"
+        ports:
+          - 8000:8000
+
     steps:
       - uses: actions/checkout@v2
 

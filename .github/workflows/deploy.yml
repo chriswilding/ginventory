@@ -6,28 +6,8 @@ jobs:
   deploy:
     runs-on: ubuntu-latest
 
-    services:
-      dynamodb-local:
-        image: "amazon/dynamodb-local:latest"
-        # options: >-
-        #   --entrypoint "java -jar DynamoDBLocal.jar -sharedDb"
-        ports:
-          - 8000:8000
-
     steps:
       - uses: actions/checkout@v2
-
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: eu-west-1
-
-      - name: Setup DynamoDB
-        run: |
-          aws dynamodb create-table --cli-input-json "file://./examples/create-table.json" --endpoint-url "http://localhost:8000"
-          aws dynamodb put-item  --cli-input-json "file://./examples/put-item.json" --endpoint-url "http://localhost:8000"
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -39,6 +19,13 @@ jobs:
 
       - name: Test
         run: go test -v ./...
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: eu-west-1
 
       - name: Deploy to AWS Lambda
         run: |

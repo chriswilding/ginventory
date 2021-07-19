@@ -12,6 +12,18 @@ jobs:
     steps:
       - uses: actions/checkout@v2
 
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: test
+          aws-secret-access-key: test
+          aws-region: eu-west-1
+
+      - name: Setup DynamoDB
+        run: |
+          aws dynamodb create-table --cli-input-json "file://./examples/create-table.json" --endpoint-url "http://localhost:8000"
+          aws dynamodb put-item  --cli-input-json "file://./examples/put-item.json" --endpoint-url "http://localhost:8000"
+
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
