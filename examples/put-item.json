@@ -1,0 +1,17 @@
+{
+  "TableName": "ginventory",
+  "Item": {
+    "PK": {
+      "S": "GIN#TANQUERAY"
+    },
+    "SK": {
+      "S": "GIN#TANQUERAY"
+    },
+    "Name": {
+      "S": "Tanqueray"
+    },
+    "CountryOfOrigin": {
+      "S": "United Kingdom"
+    }
+  }
+}

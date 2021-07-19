@@ -7,8 +7,25 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+
+    services:
+      dynamodb-local:
+        image: "amazon/dynamodb-local:latest"
+        ports:
+          - 8000:8000
+
     steps:
       - uses: actions/checkout@v2
+
+      - name: Setup DynamoDB
+        env:
+          AWS_PAGER: ""
+          AWS_ACCESS_KEY_ID: "test"
+          AWS_SECRET_ACCESS_KEY: "test"
+          AWS_DEFAULT_REGION: "eu-west-1"
+        run: |
+          aws dynamodb create-table --cli-input-json "file://./examples/create-table.json" --endpoint-url "http://localhost:8000" --debug
+          aws dynamodb put-item  --cli-input-json "file://./examples/put-item.json" --endpoint-url "http://localhost:8000" --debug
 
       - name: Set up Go
         uses: actions/setup-go@v2
@@ -19,4 +36,8 @@ jobs:
         run: go build -v ./...
 
       - name: Test
+        env:
+          AWS_ACCESS_KEY_ID: "test"
+          AWS_SECRET_ACCESS_KEY: "test"
+          AWS_DEFAULT_REGION: "eu-west-1"
         run: go test -v ./...

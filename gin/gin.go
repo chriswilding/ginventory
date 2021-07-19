@@ -7,7 +7,6 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
-	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbiface"
 )
 
 type GinID struct {
@@ -35,30 +34,36 @@ type GinRepository interface {
 	// DeleteGinByID(ctx context.Context, id GinID)
 }
 
-func NewGinRepository() *dynamoDBGinRepository {
-	s := session.Must(session.NewSession(&aws.Config{
-		Region: aws.String("eu-west-1"),
-	}))
+func NewGinRepository(awsConfig *aws.Config) *DynamoDBGinRepository {
+	if awsConfig == nil {
+		awsConfig = &aws.Config{
+			Region: aws.String("eu-west-1"),
+		}
+	}
+
+	s := session.Must(session.NewSession(awsConfig))
 
 	client := dynamodb.New(s)
 
-	r := &dynamoDBGinRepository{
-		Client: client,
+	r := &DynamoDBGinRepository{
+		client: client,
 	}
 
 	return r
 }
 
-type dynamoDBGinRepository struct {
-	Client dynamodbiface.DynamoDBAPI
+type DynamoDBGinRepository struct {
+	client *dynamodb.DynamoDB
 }
+
+var _ GinRepository = (*DynamoDBGinRepository)(nil)
 
 // func (g *DynamoDBGinRepository) CreateGin(ctx context.Context, gin *Gin) *Gin {
 // 	return nil
 // }
 
-func (g *dynamoDBGinRepository) GetGinByID(ctx context.Context, id GinID) (*Gin, error) {
-	gio, err := g.Client.GetItemWithContext(ctx, &dynamodb.GetItemInput{
+func (g *DynamoDBGinRepository) GetGinByID(ctx context.Context, id GinID) (*Gin, error) {
+	gio, err := g.client.GetItemWithContext(ctx, &dynamodb.GetItemInput{
 		TableName: aws.String("ginventory"),
 		Key: map[string]*dynamodb.AttributeValue{
 			"PK": {
