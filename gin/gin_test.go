@@ -4,13 +4,17 @@ import (
 	"context"
 	"testing"
 
+	"github.com/aws/aws-sdk-go/aws"
 	"github.com/stretchr/testify/assert"
 )
 
 func TestGetGinByID(t *testing.T) {
 	id := "GIN#TANQUERAY"
 
-	repository := NewGinRepository()
+	repository := NewGinRepository(&aws.Config{
+		Region:   aws.String("eu-west-1"),
+		Endpoint: aws.String("http://localhost:8000"),
+	})
 
 	g, err := repository.GetGinByID(context.Background(), GinID{
 		PK: id,
