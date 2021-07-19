@@ -11,20 +11,20 @@ jobs:
     services:
       dynamodb-local:
         image: "amazon/dynamodb-local:latest"
-        # options: >-
-        #   --entrypoint "java -jar DynamoDBLocal.jar -sharedDb"
+        options: >-
+          --entrypoint "java -jar DynamoDBLocal.jar -sharedDb"
         ports:
           - 8000:8000
 
     steps:
       - uses: actions/checkout@v2
 
-      - name: Configure AWS Credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: test
-          aws-secret-access-key: test
-          aws-region: eu-west-1
+      # - name: Configure AWS Credentials
+      #   uses: aws-actions/configure-aws-credentials@v1
+      #   with:
+      #     aws-access-key-id: test
+      #     aws-secret-access-key: test
+      #     aws-region: eu-west-1
 
       - name: Setup DynamoDB
         run: |
