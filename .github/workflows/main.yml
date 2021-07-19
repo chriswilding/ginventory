@@ -24,8 +24,8 @@ jobs:
           AWS_SECRET_ACCESS_KEY: "test"
           AWS_DEFAULT_REGION: "eu-west-1"
         run: |
-          aws dynamodb create-table --cli-input-json "file://./examples/create-table.json" --endpoint-url "http://dynamodb-local:8000" --debug
-          aws dynamodb put-item  --cli-input-json "file://./examples/put-item.json" --endpoint-url "http://dynamodb-local:8000" --debug
+          aws dynamodb create-table --cli-input-json "file://./examples/create-table.json" --endpoint-url "http://localhost:8000" --debug
+          aws dynamodb put-item  --cli-input-json "file://./examples/put-item.json" --endpoint-url "http://localhost:8000" --debug
 
       - name: Set up Go
         uses: actions/setup-go@v2

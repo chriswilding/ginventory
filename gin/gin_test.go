@@ -13,7 +13,7 @@ func TestGetGinByID(t *testing.T) {
 
 	repository := NewGinRepository(&aws.Config{
 		Region:   aws.String("eu-west-1"),
-		Endpoint: aws.String("http://dynamodb-local:8000"),
+		Endpoint: aws.String("http://localhost:8000"),
 	})
 
 	g, err := repository.GetGinByID(context.Background(), GinID{
